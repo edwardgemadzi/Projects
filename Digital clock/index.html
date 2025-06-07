@@ -7,12 +7,28 @@
 </head>
 <body>
     <div class="container">
-        <h1></h1>
+        <h1>Digital Clock</h1>
         <div id="clock"></div>
         <label class="theme-switch">
             <input type="text" id="">
             <span class="slider"></span>
         </label>
+        <div id="time"></div>
     </div>
+
+    <script>
+        const time = document.getElementById('time')
+        function clock(){
+            setTimeout(() => {
+                const now = new Date();
+                const hours = now.getHours().toString().padStart(2, '0');
+                const minutes = now.getMinutes().toString().padStart(2, '0');
+                const seconds = now.getSeconds().toString().padStart(2, '0');
+                time.innerText = `${hours}:${minutes}:${seconds}`;
+            }, 1000);
+        }
+        clock();
+
+    </script>
 </body>
 </html>

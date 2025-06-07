@@ -1,14 +1,16 @@
 let piano = {
     A : new Audio(),
+    w : new Audio(),
     S : new Audio(),
     D : new Audio(),
+    E : new Audio(),
     F : new Audio(),
-    G : new Audio(),
-    H : new Audio(),
+    R : new Audio(),
     J : new Audio(),
+    I : new Audio(),
     K : new Audio(),
+    O : new Audio(),
     L : new Audio(),
-    P : new Audio(),
 }
 
 function playSound(event){
