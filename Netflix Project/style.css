@@ -1,0 +1,346 @@
+*{
+    font-family: Netflix Sans, Helvetica Neue, Segoe UI, Roboto, Ubuntu, sans-serif;;
+}
+
+body{
+    margin: 0;
+    padding: 0;
+    background-color: black;
+}
+
+.background {
+    background-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.1), rgba(1, 0, 0, 0.8)), 
+                      url(./assets/images/mainBG.png);
+    /* background-size: cover; */
+    /* background-position: center; */
+}
+
+.navBar {
+    padding-left: 3rem;
+    padding-right: 3rem;
+}
+
+.container, .trendingContainer, .moreReasons, .footerContainer, .bg-body-tertiary {
+    margin-left: 3rem;
+    margin-right: 3rem;
+}
+
+.navBar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0));
+    padding-top: 20px;
+    padding-bottom: 20px;
+}
+
+.navBarIcon {
+    height: auto;
+    width: 150px
+}
+
+.signBtn {
+    background-color: white;
+    color: black;
+    padding: 10px 20px;
+    width: 88px;
+    height: auto;
+    border: none;
+    font-size: auto;
+    font-weight: bold;
+    cursor: pointer;
+    border-radius: 25px; 
+}
+.container{
+    height: 25rem;
+}
+#hero{
+    position: relative;
+    background-image: linear-gradient(rgba(0, 0, 0, 0.795), rgba(71, 69, 69, 0.835)), url(./assets/images/netflixBackground.jpg);
+    color: white;
+    background-size: cover;
+    background-position: center;
+    border-radius: 15px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center; 
+    align-items: center; 
+    padding: 5rem;
+    text-align: center; 
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 50% 96%, 0 100%);
+}
+
+/* #hero::after {
+    content: "";
+    position: absolute;
+    bottom: -30px;
+    left: 0;
+    width: 100%;
+    height: 100px;
+    background-color: rgba(13, 12, 12, 0.962); 
+    clip-path: ellipse(60% 50% at 50% 100%);
+    z-index: 1;
+}  */
+
+
+#hero h1 {
+    margin-top: 0;
+    font-size: 3rem;
+    text-wrap: wrap;
+}
+
+h2, h3 {
+    position: relative;
+}
+
+.inputGroup {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    position: relative;
+}
+
+.inputGroup input {
+    display: flex;
+    background-color: rgba(255, 255, 255, 0.274);
+    color: black;
+    border-radius: 50px;
+    padding: 15px 20px;
+    border: none;
+    font-size: 1rem;
+    outline: none;
+    width: 300px;
+    height: 30px;
+}
+
+.inputGroup input:focus {
+    border: 2px solid white;
+}
+
+.inputGroup label {
+    position: absolute;
+    left: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: transparent;
+    font-size: 1rem;
+    transition: all 0.3s ease-in-out;
+    pointer-events: none;
+}
+
+.inputGroup input:focus + label,
+.inputGroup input:not(:placeholder-shown) + label {
+    top: 18px;
+    left: 15px;
+    font-size: 0.8rem;
+    color: white;
+    padding: 2px 5px;
+    border-radius: 5px;
+}
+
+#getStarted {
+    background-color: red;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    border-radius: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    font-weight: 500;
+    width: 250px;
+}
+
+input {
+    background-color: rgba(255, 255, 255, 0.6);
+    color: white;
+    border-radius: 25px;
+    padding: 10px 20px;
+}
+
+.trendingContainer, .moreReasons, .faqContainer, .footerContainer {
+    padding-left: 7rem;
+    padding-right: 7rem;
+}
+
+
+.divTitle{
+    color: rgba(255, 255, 255, 0.806);
+    font-size: 2rem;
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+}
+
+
+.trendingItems {
+    display: flex;
+    gap: 1.5rem;
+    overflow-x: auto; 
+    padding: 2rem;
+    scrollbar-width: none; 
+    z-index: 10;
+    
+}
+
+.trendingCard {
+    position: relative;
+    display: inline-block;
+    transition: transform 0.3s ease-in-out;
+    
+}
+
+.trendingCard:hover {
+    transform: scale(1.1); 
+}
+
+.trendingCard img{
+    width: 170px;
+    border-radius: 25px;
+    
+}
+
+.playBtn {
+    background: transparent;
+    padding-left: 5px;
+    border: none;
+    cursor: pointer;
+}
+.playBtn p{
+    position: absolute;
+    font-size: 4.5rem;
+    font-weight: 900;
+    color: black;
+    top: -4rem;
+    left: -1.2rem;
+    -webkit-text-stroke: 2px white; 
+}
+
+.reasonsContainer{
+    display: flex;
+    gap: 1.5rem;
+}
+
+.reasons{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between; 
+    padding: 1rem;
+    border-radius: 25px;
+    background-color: rgba(89, 78, 78, 0.345);
+    width: 100%;
+    min-height: 150px;
+}
+
+.reasons svg{
+    width: 48px;
+    height: 48px;
+    align-self: flex-end;
+}
+
+.reasons h3{
+    color: rgba(255, 255, 255, 0.822);
+    font-size: 1rem;
+}
+
+.reasons p{
+    color: rgba(255, 255, 255, 0.671);
+    font-size: 0.9rem;
+}
+
+.faq{
+    color: white;
+}
+.faqItems summary:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+    cursor: pointer;
+}
+.faqItems summary {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    padding: 1.5rem;
+    border-radius: 20px;
+    background-color: rgba(115, 97, 97, 0.383);
+    margin-bottom: 8px;
+    height: 1rem;
+}
+
+.faqItems p{
+    background-color: rgba(115, 97, 97, 0.383);
+    padding: 1rem;
+    border-radius: 20px;
+} 
+
+.hero-input h3{
+    color: white;
+    font-size: 1rem;
+    margin-bottom: 1rem;
+    text-align: center;
+}
+
+.footerContainer{
+    color: rgba(255, 255, 255, 0.7);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    
+}
+
+#bottomInput label{
+    color: white;
+}
+
+.footer {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    flex-wrap: wrap;
+    width: 100%;
+    background-color: black;
+    padding: 10rem 0;
+
+}
+
+.footer-links {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr); 
+    gap: 1rem;
+    width: 100%;
+}
+
+.footer-links a, .footer-links p {
+    color: rgba(255, 255, 255, 0.7);
+    text-decoration: underline;
+    font-size: 0.875rem;
+}
+
+.langBtn{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: rgba(255, 255, 255, 0.7);
+    width: 8rem;
+    height: 2rem;
+    background-color: black;
+    border-radius: 50px;
+    border: 1px solid white;
+}
+
+.language {
+    background-color: black;
+    color: rgba(255, 255, 255, 0.7);
+    border: none;
+    display: flex;
+    font-size: 1.2rem;
+    cursor: pointer;
+}
+
+.language:focus {
+    outline: none;
+    border: none;
+}
+
