@@ -291,62 +291,62 @@ function initApp(){
     }
 
     async function getForecast(city) {
-    const url = `http://api.weatherapi.com/v1/current.json?key=${WEATHER_API_KEY}&q=${city}&aqi=no`;
-    const res = await fetch(url);
-    const forecast = await res.json();
+        const url = `https://api.weatherapi.com/v1/forecast.json?key=${WEATHER_API_KEY}&q=${city}&days=3&aqi=no&alerts=no`;
+        const res = await fetch(url);
+        const forecast = await res.json();
 
-    if (!forecast.forecast) return;
+        if (!forecast.forecast) return;
 
-    const current = forecast.current;
-    const summary = `
-        <div>Feels Like: ${current.feelslike_c}°C</div>
-        <div>Wind: ${current.wind_kph} km/h ${current.wind_dir}</div>
-        <div>UV: ${current.uv}</div>
-        <div>Visibility: ${current.vis_km} km</div>
-        <div>Humidity: ${current.humidity}%</div>
-    `;
-    document.getElementById('current-extra').innerHTML = summary;
+        const current = forecast.current;
+        const summary = `
+            <div>Feels Like: ${current.feelslike_c}°C</div>
+            <div>Wind: ${current.wind_kph} km/h ${current.wind_dir}</div>
+            <div>UV: ${current.uv}</div>
+            <div>Visibility: ${current.vis_km} km</div>
+            <div>Humidity: ${current.humidity}%</div>
+        `;
+        document.getElementById('current-extra').innerHTML = summary;
 
-    let table = '<h4 style="margin-top:1rem; font-size: 1rem;">Forecast</h4>';
-    table += '<table style="width:100%; color:white; border-collapse: collapse;">';
-    table += `<thead><tr>
-        <th style="border-bottom: 1px solid #555; padding: 10px;">Day</th>
-        <th style="border-bottom: 1px solid #555; padding: 10px;">Condition</th>
-        <th style="border-bottom: 1px solid #555; padding: 10px;">High</th>
-        <th style="border-bottom: 1px solid #555; padding: 10px;">Low</th>
-    </tr></thead><tbody>`;
+        let table = '<h4 style="margin-top:1rem; font-size: 1rem;">Forecast</h4>';
+        table += '<table style="width:100%; color:white; border-collapse: collapse;">';
+        table += `<thead><tr>
+            <th style="border-bottom: 1px solid #555; padding: 10px;">Day</th>
+            <th style="border-bottom: 1px solid #555; padding: 10px;">Condition</th>
+            <th style="border-bottom: 1px solid #555; padding: 10px;">High</th>
+            <th style="border-bottom: 1px solid #555; padding: 10px;">Low</th>
+        </tr></thead><tbody>`;
 
-    forecast.forecast.forecastday.forEach(day => {
-        const date = new Date(day.date);
-        const dayName = date.toLocaleDateString("en-US", { weekday: "short" });
-        table += `<tr>
-        <td style="text-align: center; padding: 10px;">${dayName}</td>
-        <td style="text-align: center; padding: 10px;">
-            <img src="https:${day.day.condition.icon}" alt="${day.day.condition.text}" style="width: 24px; vertical-align: middle;"> ${day.day.condition.text}
-        </td>
-        <td style="text-align: center; padding: 10px;">${day.day.maxtemp_c}°C</td>
-        <td style="text-align: center; padding: 10px;">${day.day.mintemp_c}°C</td>
-        </tr>`;
-    });
+        forecast.forecast.forecastday.forEach(day => {
+            const date = new Date(day.date);
+            const dayName = date.toLocaleDateString("en-US", { weekday: "short" });
+            table += `<tr>
+            <td style="text-align: center; padding: 10px;">${dayName}</td>
+            <td style="text-align: center; padding: 10px;">
+                <img src="https:${day.day.condition.icon}" alt="${day.day.condition.text}" style="width: 24px; vertical-align: middle;"> ${day.day.condition.text}
+            </td>
+            <td style="text-align: center; padding: 10px;">${day.day.maxtemp_c}°C</td>
+            <td style="text-align: center; padding: 10px;">${day.day.mintemp_c}°C</td>
+            </tr>`;
+        });
 
-        table += '</tbody></table>';
-        document.getElementById('forecastResult').innerHTML = table;
+            table += '</tbody></table>';
+            document.getElementById('forecastResult').innerHTML = table;
+        }
+        document.getElementById("citySearch").addEventListener("keypress", function(event) {
+        if (event.key === "Enter") {
+            searchCityWeather();
+        }
+        });
+        
+        function centerMapOnLocation(lng, lat) {
+        map.flyTo({
+            center: [lng, lat],
+            zoom: 11.9,
+            bearing: 0,
+            pitch: 90,
+            speed: 1.9,
+            curve: 1.42,
+            easing: t => t
+        });
     }
-    document.getElementById("citySearch").addEventListener("keypress", function(event) {
-    if (event.key === "Enter") {
-        searchCityWeather();
-    }
-    });
-    
-    function centerMapOnLocation(lng, lat) {
-    map.flyTo({
-        center: [lng, lat],
-        zoom: 11.9,
-        bearing: 0,
-        pitch: 90,
-        speed: 1.9,
-        curve: 1.42,
-        easing: t => t
-    });
-}
 }
