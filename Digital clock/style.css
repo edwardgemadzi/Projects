@@ -1,0 +1,21 @@
+body{
+    display: flex;
+    justify-content: center;
+    height: 100vh;
+    align-items: center;
+}
+.container{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    border: 1px solid ;
+    border-radius: 20px;
+    box-shadow: 4px 4px 12px rgba(0, 0, 0, 0.25);
+}
+#clock{
+    display: flex;
+    margin: 10px;
+    padding: 10px;
+    font-size: 50px;
+}

@@ -4,8 +4,8 @@ const axios = require('axios');
 const app = express();
 const PORT = 3000;
 
-const CAT_URL = '';
-const DOG_URL = '';
+const CAT_URL = 'https://api.thecatapi.com/v1/images/search';
+const DOG_URL = 'https://dog.ceo/api/breeds/image/random';
 
 //show cat and dogs image
 app.get('/cat-v-dog', async (req,res)=>{
