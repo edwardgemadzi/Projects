@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CORS</title>
+    <style>
+        body{
+            font-family: Arial,sans-serif;
+            background: linear-gradient(to right,#667eea,#764ba2);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .form-conatiner{
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            width: 300px;
+        }
+
+        h2{
+            text-align: center;
+            margin: 20px;
+            text-shadow: 0 4px 8px black;
+        }
+
+        input{
+            width: 100%;
+            padding: 10px;
+            margin: 8px 0;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+
+        }
+        button{
+            width: 100%;
+            padding: 10px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+        }
+
+        #reponseMsg{
+            margin-top: 15px;
+            text-align: center;
+            color: green;
+        }
+    </style>
+</head>
+<body>
+    <div class="form-conatiner">
+        <h2>Register</h2>
+        <form id="register-form">
+            <input type="text" id="name" placeholder="Full Name" required >
+            <input type="email" id="email" placeholder="Email" required >
+            <input type="password" id="password" placeholder="password" required >
+            <button type="submit">Register</button>
+        </form>
+
+        <p id="responseMsg"></p>
+    </div>
+
+    <script>
+        document.getElementById('register-form').addEventListener('submit', async function(e){
+       e.preventDefault();  //Prevent the form from refreshing
+
+       const name= document.getElementById('name').value.trim()
+       const email= document.getElementById('email').value.trim()
+       const password= document.getElementById('password').value;
+
+
+       if(!name || !email || !password){
+        alert("All fields are required!")
+        return;
+       }
+         
+     const response = await fetch('http://localhost:3000/register',{
+        method:'POST',
+        headers: {'Content-Type':'application/json'},
+        body:JSON.stringify({name,email,password})
+     });
+
+     const data = await response.json();
+     document.getElementById('responseMsg').innerText = data.message;
+        });
+    </script>
+</body>
+</html>
