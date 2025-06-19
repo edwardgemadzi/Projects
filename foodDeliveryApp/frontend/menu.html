@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4Q6Gf2aSP4eDXB8Miphtr37CMZZQ5oXLH2yaXMJ2w8e2ZtHTl7GptT4jmndRuHDT" crossorigin="anonymous">
+<style>
+    .card img{
+      object-fit: cover;
+      height: 250px;
+        
+        
+    }
+
+    .card{
+        overflow: hidden;
+        
+    }
+</style>
+
+</head>
+<body>
+    <!-- As a link -->
+<nav class="navbar navbar-dark bg-dark mb-4">
+    <a class="navbar-brand" href="#">Foodie</a>
+  <div class="">
+    <a href="cart.html" class="btn btn-warning">🛒(<span id="cart-count">0</span>)</a>
+  </div>
+</nav>
+
+<div class="container">
+    <div class="row" id="menu-items">
+        <!-- Food items will be loaded here -->
+    </div>
+</div>
+
+
+<script>
+    const menu = [
+        {id:1,name:"Pizza",price:199,image: "https://images.unsplash.com/photo-1604382354936-07c5d9983bd3?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OHx8cGl6emF8ZW58MHx8MHx8fDA%3D"},
+        {id:2,name:"Burger",price:99,image: "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8YnVyZ2VyfGVufDB8fDB8fHww"},
+        {id:3,name:"Pasta",price:149,image: "https://images.unsplash.com/photo-1621996346565-e3dbc646d9a9?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NHx8cGFzdGF8ZW58MHx8MHx8fDA%3D"},
+        {id:4,name:"Noodles",price:100,image: "https://images.unsplash.com/photo-1585032226651-759b368d7246?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8bm9vZGxlc3xlbnwwfHwwfHx8MA%3D%3D"}
+    ];
+
+    let cart = JSON.parse(localStorage.getItem("cart")) || []
+
+    function updateCartCount(){
+        document.getElementById("cart-count").innerText = cart.length;
+    }
+
+    //Add to cart
+    function addToCart(itemId){
+         const item = menu.find(m => m.id === itemId);
+         cart.push(item)
+         localStorage.setItem("cart",JSON.stringify(cart));
+         updateCartCount()
+         alert(`${item.name} added to Cart!`)
+    }
+
+
+    //Menu Display
+
+    function displayMenu(){
+        const container = document.getElementById("menu-items");
+        menu.forEach(item => {
+             container.innerHTML += `
+             <div class="col-md-4" mb-4">
+                <div class="card" >
+                 <img src="${item.image}" class="card-img-top" alt="${item.name}">
+                  <div class="card-body">
+                  <h5 class="card-title">${item.name}</h5>
+                  <p class="card-text">${item.price}</p>
+                   <button class="btn btn-success" onclick="addToCart(${item.id})" >Add to Cart</button>
+                 </div>
+                  </div>
+                </div>
+             
+             
+             `;
+
+
+        });   
+    }
+
+    displayMenu()
+    updateCartCount()
+
+</script>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js" integrity="sha384-j1CDi7MgGQ12Z7Qab0qlWQ/Qqz24Gc6BM0thvEMVjHnfYGF0rmFCozFSxQBxwHKO" crossorigin="anonymous"></script>
+</body>
+</html>
