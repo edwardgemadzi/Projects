@@ -9,6 +9,7 @@
 <body>
     <nav class="navbar navbar-dark bg-danger mb-4">
         <a class="navbar-brand" href="menu.html">⬅Back to Menu</a>
+        <span id="greeting" class="text-white ml-3"></span>
     </nav>
     <div class="container">
         <h2>Your Cart</h2>
@@ -28,6 +29,18 @@
     </div>
 
 <script>
+
+ const userEmail = localStorage.getItem("userEmail")
+    if(!userEmail){
+        alert('please login first')
+        window.location.href ="login.html";
+    }
+
+   document.getElementById("greeting").innerText = `Welcome , ${userEmail}`;
+
+
+
+
 
 let cart = JSON.parse(localStorage.getItem("cart")) || []
 

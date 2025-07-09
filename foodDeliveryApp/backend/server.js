@@ -91,7 +91,31 @@ const orders = fs.existsSync(ORDERS_FILE)
 
 })
 
+app.get("/admin/orders",(req,res)=>{
 
+ const orders = fs.existsSync(ORDERS_FILE) ? JSON.parse(fs.readFileSync(ORDERS_FILE)) : [];
+
+      //Terinary Oper            condition  ?  'True' : 'False'
+
+ res.json(orders);  
+
+});
+
+
+
+
+
+
+app.get("/user/orders",(req,res)=>{
+ 
+    const {email} = req.query;
+
+ const orders = fs.existsSync(ORDERS_FILE) ? JSON.parse(fs.readFileSync(ORDERS_FILE)) : [];
+
+   const userOrders = orders.filter( order => order.email === email);
+   res.json(userOrders)
+
+});
 
 app.listen(3000,()=>{
     console.log("Server is running at http://localhost:3000")
