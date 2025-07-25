@@ -1,0 +1,9 @@
+body {
+  background: linear-gradient(135deg, #0f2027, #203a43, #2c5364); /* Example gradient */
+  background-size: cover;
+  min-height: 100vh;
+  margin: 0;
+  font-family: Arial, sans-serif;
+  color: aliceblue;
+  padding: 1%;
+}
