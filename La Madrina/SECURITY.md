@@ -137,7 +137,7 @@ express-slow-down + express-rate-limit
 ### Environment Variables for Production:
 ```bash
 NODE_ENV=production
-MONGO_URI=mongodb+srv://user:pass@cluster.mongodb.net/bakery
+MONGO_URI=mongodb+srv://<username>:<password>@<cluster>.mongodb.net/<database>
 JWT_SECRET=<88-char-random-string>
 FRONTEND_URL=https://yourdomain.com
 SMTP_HOST=your-email-server.com

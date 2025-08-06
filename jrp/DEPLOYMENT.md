@@ -17,7 +17,7 @@
 4. Whitelist all IP addresses (0.0.0.0/0) for Vercel
 5. Get your connection string (it should look like):
    ```
-   mongodb+srv://username:password@cluster.mongodb.net/jrp?retryWrites=true&w=majority
+   mongodb+srv://<username>:<password>@<cluster>.mongodb.net/<database>?retryWrites=true&w=majority
    ```
 
 ### 2. Cloudinary Setup
