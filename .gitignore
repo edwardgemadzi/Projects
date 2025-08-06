@@ -137,3 +137,73 @@ dist
 .yarn/build-state.yml
 .yarn/install-state.gz
 .pnp.*
+
+# ======= PROJECT-SPECIFIC SECURITY FILES =======
+
+# Backend environment files (CRITICAL - contains API keys, JWT secrets, DB credentials)
+backend/.env
+backend/.env.local
+backend/.env.production
+backend/.env.development
+**/backend/.env
+**/backend/.env.*
+
+# Test cookie files (contains session data)
+*_cookies.txt
+admin_cookies.txt
+alex_cookies.txt
+emma_cookies.txt
+employer_cookies.txt
+employer2_cookies.txt
+sarah_cookies.txt
+
+# Backend logs (may contain sensitive request data)
+backend/logs/
+**/logs/
+*.log
+
+# Upload directories (user-uploaded files)
+uploads/
+**/uploads/
+public/uploads/
+backend/uploads/
+
+# Database files
+*.sqlite
+*.sqlite3
+*.db
+
+# SSL certificates and private keys
+*.pem
+*.key
+*.crt
+*.cert
+*.p12
+*.pfx
+
+# IDE and editor config files that might contain paths/credentials
+.vscode/settings.json
+.idea/
+*.swp
+*.swo
+
+# OS-specific files with potential metadata
+Thumbs.db
+Desktop.ini
+
+# Temporary files that might contain sensitive data
+tmp/
+temp/
+**/tmp/
+**/temp/
+
+# Coverage reports (might expose internal structure)
+coverage/
+.nyc_output/
+
+# Security scan results
+.snyk
+
+# Local configuration overrides
+config.local.js
+config.local.json
