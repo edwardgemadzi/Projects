@@ -1,0 +1,260 @@
+:root {
+  --primary-color: #E91E63;    /* Pink */
+  --secondary-color: #F8BBD9;  /* Light Pink */
+  --accent-color: #FCE4EC;     /* Very Light Pink */
+  --text-dark: #000000;        /* Black */
+  --text-light: #FFFFFF;       /* White */
+  --bg-cream: #FFFFFF;         /* White background */
+  --pink-gradient: linear-gradient(135deg, #E91E63 0%, #F8BBD9 100%);
+}
+
+body {
+  font-family: 'Georgia', serif;
+  background-color: var(--bg-cream);
+  color: var(--text-dark);
+  line-height: 1.6;
+}
+
+.navbar-brand {
+  font-weight: bold;
+  font-size: 1.5rem;
+  color: var(--primary-color) !important;
+}
+
+.navbar {
+  background-color: rgba(255, 255, 255, 0.95) !important;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.nav-link {
+  color: var(--text-dark) !important;
+  font-weight: 500;
+  transition: color 0.3s ease;
+}
+
+.nav-link:hover {
+  color: var(--primary-color) !important;
+}
+
+.btn-primary {
+  background-color: var(--primary-color);
+  border-color: var(--primary-color);
+  font-weight: 500;
+}
+
+.btn-primary:hover {
+  background-color: var(--secondary-color);
+  border-color: var(--secondary-color);
+}
+
+.btn-outline-primary {
+  color: var(--primary-color);
+  border-color: var(--primary-color);
+}
+
+.btn-outline-primary:hover {
+  background-color: var(--primary-color);
+  border-color: var(--primary-color);
+}
+
+.hero-section {
+  background: var(--pink-gradient);
+  color: white;
+  padding: 100px 0;
+  text-align: center;
+}
+
+.hero-section h1 {
+  font-size: 3.5rem;
+  font-weight: bold;
+  margin-bottom: 1rem;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.hero-section p {
+  font-size: 1.2rem;
+  margin-bottom: 2rem;
+}
+
+.card {
+  border: none;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  height: 100%;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+}
+
+/* Override card height for contact page cards */
+.contact-info-card {
+  height: auto !important;
+  min-height: auto !important;
+}
+
+.contact-info-card .card-body {
+  padding: 0.75rem 0.75rem !important;
+}
+
+.contact-info-card:hover {
+  transform: none !important;
+}
+
+.card-img-top {
+  height: 250px;
+  object-fit: cover;
+}
+
+.product-price {
+  color: var(--primary-color);
+  font-weight: bold;
+  font-size: 1.2rem;
+}
+
+.footer {
+  background-color: var(--text-dark);
+  color: var(--text-light);
+  padding: 40px 0 20px;
+  margin-top: auto;
+}
+
+.footer h5 {
+  color: var(--secondary-color);
+  margin-bottom: 1rem;
+}
+
+.footer a {
+  color: var(--text-light);
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.footer a:hover {
+  color: var(--secondary-color);
+}
+
+.section-title {
+  color: var(--primary-color);
+  font-weight: bold;
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+.loading-spinner {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 200px;
+}
+
+.error-message {
+  background-color: #f8d7da;
+  color: #721c24;
+  border: 1px solid #f5c6cb;
+  border-radius: 0.375rem;
+  padding: 1rem;
+  margin: 1rem 0;
+}
+
+.success-message {
+  background-color: #d1e7dd;
+  color: #0f5132;
+  border: 1px solid #badbcc;
+  border-radius: 0.375rem;
+  padding: 1rem;
+  margin: 1rem 0;
+}
+
+@media (max-width: 768px) {
+  .hero-section h1 {
+    font-size: 2.5rem;
+  }
+  
+  .hero-section p {
+    font-size: 1rem;
+  }
+}
+
+/* Pink theme enhancements */
+.badge {
+  background-color: var(--primary-color) !important;
+  color: white !important;
+}
+
+.badge.bg-secondary {
+  background-color: var(--secondary-color) !important;
+  color: var(--text-dark) !important;
+}
+
+.card-title {
+  color: var(--text-dark);
+}
+
+.card-text {
+  color: #666;
+}
+
+.navbar-brand:hover {
+  color: var(--secondary-color) !important;
+}
+
+/* Pink gradient background for sections */
+.pink-bg {
+  background: var(--accent-color);
+}
+
+.pink-gradient-bg {
+  background: var(--pink-gradient);
+  color: white;
+}
+
+/* Form styling */
+.form-control:focus {
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 0.2rem rgba(233, 30, 99, 0.25);
+}
+
+.form-label {
+  color: var(--text-dark);
+  font-weight: 500;
+}
+
+/* Button variants */
+.btn-pink {
+  background-color: var(--primary-color);
+  border-color: var(--primary-color);
+  color: white;
+}
+
+.btn-pink:hover {
+  background-color: #C2185B;
+  border-color: #C2185B;
+  color: white;
+}
+
+.btn-outline-pink {
+  color: var(--primary-color);
+  border-color: var(--primary-color);
+}
+
+.btn-outline-pink:hover {
+  background-color: var(--primary-color);
+  border-color: var(--primary-color);
+  color: white;
+}
+
+/* Navbar button hover effects */
+.navbar .btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: all 0.2s ease;
+}
+
+/* Cart icon hover effect */
+.navbar .btn[aria-label="Shopping Cart"]:hover {
+  background-color: rgba(255, 255, 255, 0.1) !important;
+  border-color: rgba(255, 255, 255, 0.8) !important;
+}
