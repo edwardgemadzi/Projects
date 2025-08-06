@@ -39,7 +39,7 @@
    In Vercel Dashboard → Settings → Environment Variables, add:
 
    ```
-   MONGO_URI=mongodb+srv://username:password@cluster.mongodb.net/jrp?retryWrites=true&w=majority
+   MONGO_URI=mongodb+srv://<username>:<password>@<cluster>.mongodb.net/<database>?retryWrites=true&w=majority
    JWT_SECRET=your-super-secure-32-char-secret-key
    CLOUDINARY_CLOUD_NAME=your-cloud-name
    CLOUDINARY_API_KEY=your-api-key
