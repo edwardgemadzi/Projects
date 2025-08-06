@@ -31,7 +31,7 @@ const AdminManageUsers = () => {
         ]);
         setUsers(usersRes.data);
         setJobs(jobsRes.data);
-      } catch (err) {
+      } catch {
         showNotification('Error fetching data');
       } finally {
         setLoading(false);
@@ -39,7 +39,7 @@ const AdminManageUsers = () => {
     };
     
     fetchData();
-  }, []);
+  }, [showNotification]);
 
   const handleDeleteUser = async (userId) => {
     if (window.confirm('Are you sure you want to delete this user?')) {
@@ -47,7 +47,7 @@ const AdminManageUsers = () => {
         await axiosInstance.delete(`/admin/users/${userId}`);
         setUsers(users.filter(user => user._id !== userId));
         showNotification('User deleted successfully');
-      } catch (err) {
+      } catch {
         showNotification('Failed to delete user');
       }
     }
@@ -59,7 +59,7 @@ const AdminManageUsers = () => {
         await axiosInstance.delete(`/admin/jobs/${jobId}`);
         setJobs(jobs.filter(job => job._id !== jobId));
         showNotification('Job deleted successfully');
-      } catch (err) {
+      } catch {
         showNotification('Failed to delete job');
       }
     }
@@ -96,7 +96,7 @@ const AdminManageUsers = () => {
       
       setEditingUser(null);
       showNotification('User updated successfully');
-    } catch (err) {
+    } catch {
       showNotification('Failed to update user');
     }
   };
@@ -118,7 +118,7 @@ const AdminManageUsers = () => {
       
       setEditingJob(null);
       showNotification('Job updated successfully');
-    } catch (err) {
+    } catch {
       showNotification('Failed to update job');
     }
   };

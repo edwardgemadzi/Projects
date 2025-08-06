@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useContext, useCallback } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import axiosInstance from '../api/axios';
 import { AuthContext } from '../context/AuthContext';
@@ -44,12 +44,12 @@ const JobDetailPage = () => {
           return res.data;
         });
         setJob(result);
-      } catch (err) {
+      } catch {
         showNotification('Failed to load job details', 'error');
       }
     };
     loadJob();
-  }, [id, fetchJob]);
+  }, [id, fetchJob, showNotification]);
 
   useEffect(() => {
     const loadApplication = async () => {
@@ -59,13 +59,13 @@ const JobDetailPage = () => {
           try {
             const res = await axiosInstance.get(`/applications/status/${id}`);
             return res.data;
-          } catch (err) {
+          } catch {
             return null;
           }
         });
         setApplication(result);
-      } catch (err) {
-        console.error('Failed to check application:', err);
+      } catch {
+        console.error('Failed to check application');
       }
     };
     loadApplication();

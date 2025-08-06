@@ -25,7 +25,7 @@ const EmployerDashboard = () => {
                 // Fetch applications for employer's jobs
                 const appsRes = await axiosInstance.get('/applications/employer');
                 setApplications(appsRes.data);
-            } catch (err) {
+            } catch {
                 setJobs([]);
                 setApplications([]);
             } finally {
@@ -60,7 +60,7 @@ const EmployerDashboard = () => {
             
             setEditingJob(null);
             showNotification('Job updated successfully');
-        } catch (err) {
+        } catch {
             showNotification('Failed to update job');
         }
     };
@@ -78,7 +78,7 @@ const EmployerDashboard = () => {
             ));
             
             showNotification('Application status updated successfully');
-        } catch (err) {
+        } catch {
             showNotification('Failed to update application status');
         }
     };

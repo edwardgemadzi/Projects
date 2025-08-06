@@ -8,7 +8,7 @@ const notFound = (req, res, next) => {
 };
 
 // Error handler middleware
-const errorHandler = (err, req, res, next) => {
+const errorHandler = (err, req, res, _next) => {
     // Log the error
     logger.error(err.message, {
         stack: err.stack,

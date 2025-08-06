@@ -13,7 +13,7 @@ exports.verifyToken = (req, res, next) => {
         req.user = decoded;
         console.log('✅ Token verified. Decoded user:', decoded);
         next();
-    }catch (err){
+    }catch{
         console.error('❌ Token invalid or expired');
         return res.status(401).json({message: 'Invalid token'});
     }

@@ -40,7 +40,7 @@ function LogIn() {
         try {
             await login({ email, password });
             showNotification('Login successful! Welcome back.', 'success');
-        } catch (_error) {
+        } catch {
             showNotification('Invalid credentials. Please check your email and password.', 'error');
         } finally {
             setLoading(false);

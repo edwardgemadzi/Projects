@@ -1,5 +1,4 @@
-import { useContext, lazy, Suspense } from 'react';
-import { AuthContext } from './context/AuthContext';
+import { lazy, Suspense } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import LogIn from './pages/LoginPage';
 import Register from './pages/RegisterPage';
@@ -17,8 +16,6 @@ const AdminManageUsers = lazy(() => import('./pages/AdminManageUsers'));
 import Navbar from './components/Navbar';
 
 function App() {
-  const { user, loading } = useContext(AuthContext);
-
   return (
     <>
       <Navbar />

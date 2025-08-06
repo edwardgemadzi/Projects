@@ -11,7 +11,7 @@ router.get('/users', verifyToken, requireAdmin, async (req, res) => {
     try {
         const users = await User.find().select('-password');
         res.json(users);
-    } catch (err) {
+    } catch {
         res.status(500).json({ message: 'Error fetching users' });
     }
 });
@@ -21,7 +21,7 @@ router.get('/jobs', verifyToken, requireAdmin, async (req, res) => {
   try {
     const jobs = await Job.find().populate('createdBy', 'name').sort({ createdAt: -1 });
     res.json(jobs);
-  } catch (err) {
+  } catch {
     res.status(500).json({ message: 'Error fetching jobs' });
   }
 });
@@ -31,7 +31,7 @@ router.delete('/users/:id', verifyToken, requireAdmin, async (req, res) => {
   try {
     await User.findByIdAndDelete(req.params.id);
     res.json({ message: 'User deleted successfully' });
-  } catch (err) {
+  } catch {
     res.status(500).json({ message: 'Error deleting user' });
   }
 });
@@ -44,7 +44,7 @@ router.put('/users/:id', verifyToken, requireAdmin, async (req, res) => {
     
     const user = await User.findByIdAndUpdate(req.params.id, updates, { new: true });
     res.json(user);
-  } catch (err) {
+  } catch {
     res.status(500).json({ message: 'Error updating user' });
   }
 });
@@ -54,7 +54,7 @@ router.delete('/jobs/:id', verifyToken, requireAdmin, async (req, res) => {
   try {
     await Job.findByIdAndDelete(req.params.id);
     res.json({ message: 'Job deleted successfully' });
-  } catch (err) {
+  } catch {
     res.status(500).json({ message: 'Error deleting job' });
   }
 });
@@ -65,7 +65,7 @@ router.put('/jobs/:id', verifyToken, requireAdmin, async (req, res) => {
     const updates = req.body;
     const job = await Job.findByIdAndUpdate(req.params.id, updates, { new: true });
     res.json(job);
-  } catch (err) {
+  } catch {
     res.status(500).json({ message: 'Error updating job' });
   }
 });
@@ -81,7 +81,7 @@ router.post('/migrate-applications', verifyToken, requireAdmin, async (req, res)
       message: 'Migration completed', 
       modifiedCount: result.modifiedCount 
     });
-  } catch (err) {
+  } catch {
     res.status(500).json({ message: 'Error during migration' });
   }
 });

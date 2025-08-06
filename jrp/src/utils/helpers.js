@@ -53,7 +53,7 @@ export const formatCurrency = (amount, currency = 'USD', locale = 'en-US') => {
       minimumFractionDigits: 0,
       maximumFractionDigits: 0,
     }).format(amount);
-  } catch (error) {
+  } catch {
     // Fallback for invalid currency or locale
     return `$${amount.toLocaleString()}`;
   }

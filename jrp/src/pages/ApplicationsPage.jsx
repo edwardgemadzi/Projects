@@ -31,7 +31,7 @@ const ApplicationsPage = () => {
                         return res.data || [];
                     });
                     setApplications(result);
-                } catch (err) {
+                } catch {
                     showNotification('Failed to load applications', 'error');
                 }
             };

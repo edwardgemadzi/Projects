@@ -44,7 +44,7 @@ const JobListPage = () => {
         setJobsData(result);
         setFilteredJobs(result);
         setSearchResults(result.length);
-      } catch (err) {
+      } catch {
         showNotification('Failed to load jobs', 'error');
       }
     };

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, createContext, useContext, useCallback } from 'react';
+import React, { useState, createContext, useContext, useCallback } from 'react';
 
 // Notification Context
 const NotificationContext = createContext();
@@ -80,12 +80,7 @@ const NotificationContainer = () => {
 
 // Individual Toast Component
 const NotificationToast = ({ notification, onClose }) => {
-  const { id, message, type } = notification;
-  const [isVisible, setIsVisible] = useState(false);
-
-  useEffect(() => {
-    setIsVisible(true);
-  }, []);
+  const { message, type } = notification;
 
   const getToastClass = () => {
     const baseClasses = 'toast show mb-2';

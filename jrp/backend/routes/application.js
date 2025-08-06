@@ -50,7 +50,7 @@ router.get('/user', verifyToken, async (req, res) => {
   try {
     const applications = await Application.find({ applicant: req.user.id }).populate('job');
     res.json(applications);
-  } catch (err) {
+  } catch {
     res.status(500).json({ message: 'Error fetching applications.' });
   }
 });
@@ -68,7 +68,7 @@ router.get('/check/:jobId', verifyToken, async (req, res) => {
       hasApplied: !!existingApplication,
       applicationId: existingApplication?._id 
     });
-  } catch (err) {
+  } catch {
     res.status(500).json({ message: 'Error checking application status.' });
   }
 });
@@ -92,7 +92,7 @@ router.get('/status/:jobId', verifyToken, async (req, res) => {
       appliedAt: application.createdAt,
       job: application.job
     });
-  } catch (err) {
+  } catch {
     res.status(500).json({ message: 'Error fetching application status.' });
   }
 });

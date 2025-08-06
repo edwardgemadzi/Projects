@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useContext } from "react";
+import React, { useEffect, useState, useContext, useCallback } from "react";
 import { Link } from "react-router-dom";
 import axiosInstance from "../api/axios";
 import { AuthContext } from "../context/AuthContext";
@@ -23,36 +23,36 @@ const AdminDashboard = () => {
         execute: fetchJobsExecute
     } = useAsync();
 
-    const fetchUsers = async () => {
+    const fetchUsers = useCallback(async () => {
         try {
             const result = await fetchUsersExecute(async () => {
                 const res = await axiosInstance.get('/admin/users');
                 return res.data || [];
             });
             setUsers(result);
-        } catch (err) {
+        } catch {
             showNotification('Failed to load users', 'error');
         }
-    };
+    }, [fetchUsersExecute, showNotification]);
 
-    const fetchJobs = async () => {
+    const fetchJobs = useCallback(async () => {
         try {
             const result = await fetchJobsExecute(async () => {
                 const res = await axiosInstance.get('/admin/jobs');
                 return res.data || [];
             });
             setJobs(result);
-        } catch (err) {
+        } catch {
             showNotification('Failed to load jobs', 'error');
         }
-    };
+    }, [fetchJobsExecute, showNotification]);
 
     useEffect(() => {
         if (user?.role === "admin") {
             fetchUsers();
             fetchJobs();
         }
-    }, [user]);
+    }, [user, fetchUsers, fetchJobs]);
 
     if (!user || user.role !== "admin") {
         return (

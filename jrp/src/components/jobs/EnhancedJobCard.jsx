@@ -1,7 +1,7 @@
-import React, { useState, useContext, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { AuthContext } from '../../context/AuthContext';
 import axiosInstance from '../../api/axios';
-import { formatCurrency, formatDate } from '../../utils/helpers';
+import { formatDate } from '../../utils/helpers';
 import { useNotification } from '../ui/NotificationProvider';
 
 const EnhancedJobCard = ({ 
@@ -38,7 +38,7 @@ const EnhancedJobCard = ({
       await onApplyClick(job._id);
       // Refresh application status after successful application
       checkApplicationStatus();
-    } catch (error) {
+    } catch {
       showError('Failed to apply for job. Please try again.');
     } finally {
       setLoading(false);

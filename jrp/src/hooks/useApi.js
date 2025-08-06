@@ -36,7 +36,7 @@ export const useApi = (url, options = {}) => {
     if (immediate && url) {
       fetchData();
     }
-  }, [immediate, fetchData, ...dependencies]);
+  }, [immediate, fetchData, url, ...dependencies]);
 
   return { data, loading, error, refetch };
 };

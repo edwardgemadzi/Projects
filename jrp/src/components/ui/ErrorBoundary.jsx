@@ -2,13 +2,11 @@ import React from 'react';
 
 const ErrorBoundary = ({ children, fallback }) => {
   const [hasError, setHasError] = React.useState(false);
-  const [error, setError] = React.useState(null);
 
   React.useEffect(() => {
     const errorHandler = (error, errorInfo) => {
       console.error('Error caught by boundary:', error, errorInfo);
       setHasError(true);
-      setError(error);
     };
 
     // This is a simplified error boundary - in a real app you'd use componentDidCatch
