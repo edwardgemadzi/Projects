@@ -1,82 +1,66 @@
 const express = require('express');
 const router = express.Router();
-const { loginUser } = require('../controllers/authController');
+const { 
+    loginUser, 
+    registerUser, 
+    logoutUser, 
+    getMe,
+    forgotPassword,
+    resetPassword,
+    verifyEmail,
+    resendVerification
+} = require('../controllers/authController');
 const { verifyToken } = require('../middleware/authMiddleware');
 const { validateRegistration, validateLogin, validateProfileUpdate } = require('../middleware/validation');
 const { asyncHandler } = require('../middleware/errorHandler');
 const config = require('../config/env');
 const logger = require('../config/logger');
 const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 
-router.get('/me', verifyToken, asyncHandler(async (req, res) => {
-    const user = await User.findById(req.user.id).select('-password');
-    if (!user) {
-        return res.status(404).json({ message: 'User not found' });
-    }
-    
-    res.json({ 
-        id: user._id, 
-        email: user.email, 
-        name: user.name,
-        role: user.role
-    });
-}));
+// Get current user
+router.get('/me', verifyToken, getMe);
 
+// Login
 router.post('/login', validateLogin, loginUser);
 
-router.post('/logout', (req, res) => {
-    res.clearCookie('token', {
-        httpOnly: true,
-        sameSite: 'Lax',
-        secure: config.COOKIE_SECURE
-    });
-    logger.info(`User logged out: ${req.user?.email || 'Unknown'}`);
-    return res.status(200).json({ message: 'Logged out successfully' });
-});
+// Logout
+router.post('/logout', logoutUser);
 
-router.post('/register', validateRegistration, asyncHandler(async (req, res) => {
-    const { name, email, password, role } = req.body;
+// Register
+router.post('/register', validateRegistration, registerUser);
 
-    const userExists = await User.findOne({ email });
-    if (userExists) {
-        return res.status(409).json({ message: 'User already exists' });
+// Password reset
+router.post('/forgot-password', asyncHandler(async (req, res) => {
+    const { email } = req.body;
+    if (!email) {
+        return res.status(400).json({ message: 'Email is required' });
     }
-
-    const hashedPassword = await bcrypt.hash(password, 12);
-
-    const newUser = await User.create({
-        name,
-        email,
-        password: hashedPassword,
-        role: role || 'jobseeker'
-    });
-
-    const token = jwt.sign(
-        { id: newUser._id, email: newUser.email, role: newUser.role },
-        config.JWT_SECRET,
-        { expiresIn: config.JWT_EXPIRE }
-    );
-
-    res.cookie('token', token, {
-        httpOnly: true,
-        secure: config.COOKIE_SECURE,
-        sameSite: 'lax',
-        maxAge: 7 * 24 * 60 * 60 * 1000,
-        path: '/'
-    });
-
-    logger.info(`User registered: ${newUser.email}`);
-
-    res.status(201).json({
-        id: newUser._id,
-        email: newUser.email,
-        name: newUser.name,
-        role: newUser.role
-    });
+    await forgotPassword(req, res);
 }));
 
+router.post('/reset-password', asyncHandler(async (req, res) => {
+    const { token, password } = req.body;
+    if (!token || !password) {
+        return res.status(400).json({ message: 'Token and password are required' });
+    }
+    await resetPassword(req, res);
+}));
+
+// Email verification
+router.get('/verify-email/:token', asyncHandler(async (req, res) => {
+    await verifyEmail(req, res);
+}));
+
+router.post('/resend-verification', asyncHandler(async (req, res) => {
+    const { email } = req.body;
+    if (!email) {
+        return res.status(400).json({ message: 'Email is required' });
+    }
+    await resendVerification(req, res);
+}));
+
+// Update profile
 router.put('/me', verifyToken, validateProfileUpdate, asyncHandler(async (req, res) => {
     const { name, email, password, oldPassword } = req.body;
     const updates = {};
@@ -103,7 +87,13 @@ router.put('/me', verifyToken, validateProfileUpdate, asyncHandler(async (req, r
     }).select('-password');
     
     logger.info(`User profile updated: ${user.email}`);
-    res.json({ id: user._id, name: user.name, email: user.email, role: user.role });
+    res.json({ 
+        id: user._id, 
+        name: user.name, 
+        email: user.email, 
+        role: user.role,
+        isEmailVerified: user.isEmailVerified
+    });
 }));
 
 module.exports = router;

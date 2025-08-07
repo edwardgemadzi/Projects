@@ -23,6 +23,29 @@ const userSchema = new mongoose.Schema({
     type: String,
     enum: ['jobseeker', 'employer', 'admin'],
     default: 'jobseeker'
+  },
+
+  // Password reset fields
+  resetPasswordToken: {
+    type: String
+  },
+
+  resetPasswordExpire: {
+    type: Date
+  },
+
+  // Email verification fields
+  isEmailVerified: {
+    type: Boolean,
+    default: false
+  },
+
+  emailVerificationToken: {
+    type: String
+  },
+
+  emailVerificationExpire: {
+    type: Date
   }
 }, {
   timestamps: true

@@ -2,11 +2,12 @@ const express = require('express');
 const {
   createOrder,
   getOrders,
-  getOrder,
-  getUserOrders,
+  getOrderById,
+  updateOrderStatus,
+  trackOrder,
   getMyOrders,
-  getOrderForTracking,
-  updateOrderStatus
+  getOrderAnalytics,
+  getScheduledOrders
 } = require('../controllers/orderController');
 
 const { protect, authorize, optionalAuth } = require('../middleware/auth');
@@ -35,14 +36,26 @@ router.get('/my-orders', [
 router.get('/track/:id', [
   rateLimiters.orders,
   ...validationRules.mongoId
-], getOrderForTracking);
+], trackOrder);
+
+// Analytics routes (admin only)
+router.get('/analytics', [
+  protect,
+  authorize('admin')
+], getOrderAnalytics);
+
+// Scheduled orders
+router.get('/scheduled', [
+  protect,
+  authorize('admin', 'manager', 'baker')
+], getScheduledOrders);
 
 router.route('/:id')
   .get([
     protect,
     authorize('admin', 'manager', 'baker'),
     ...validationRules.mongoId
-  ], getOrder);
+  ], getOrderById);
 
 // Update order status
 router.put('/:id/status', [
@@ -51,12 +64,5 @@ router.put('/:id/status', [
   ...validationRules.mongoId,
   ...validationRules.updateOrderStatus
 ], updateOrderStatus);
-
-// Get specific user's orders (admin/user access)
-router.route('/user/:userId')
-  .get([
-    protect,
-    ...validationRules.mongoId
-  ], getUserOrders);
 
 module.exports = router;

@@ -108,8 +108,8 @@ const Navbar = () => {
                         to="/admin" 
                         onClick={handleLinkClick}
                       >
-                        <i className="fas fa-cog me-1"></i>
-                        Admin Dashboard
+                        <i className="fas fa-tachometer-alt me-1"></i>
+                        Dashboard
                       </Link>
                     </li>
                     <li className="nav-item">
@@ -120,6 +120,26 @@ const Navbar = () => {
                       >
                         <i className="fas fa-users me-1"></i>
                         Manage Users
+                      </Link>
+                    </li>
+                    <li className="nav-item">
+                      <Link 
+                        className={`nav-link ${isActiveLink('/admin/reports')}`} 
+                        to="/admin/reports" 
+                        onClick={handleLinkClick}
+                      >
+                        <i className="fas fa-chart-bar me-1"></i>
+                        Reports
+                      </Link>
+                    </li>
+                    <li className="nav-item">
+                      <Link 
+                        className={`nav-link ${isActiveLink('/admin/settings')}`} 
+                        to="/admin/settings" 
+                        onClick={handleLinkClick}
+                      >
+                        <i className="fas fa-cog me-1"></i>
+                        Settings
                       </Link>
                     </li>
                   </>

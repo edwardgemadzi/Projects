@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useContext } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, Link } from 'react-router-dom';
 import axiosInstance from '../api/axios';
 import { AuthContext } from '../context/AuthContext';
 import LoadingSpinner from '../components/ui/LoadingSpinner';
@@ -294,6 +294,15 @@ const JobDetailPage = () => {
         onCancel={() => setShowConfirm(false)}
         variant="primary"
       />
+
+      {user?.role === 'jobseeker' && (
+        <Link 
+          to={`/jobs/${job._id}/apply`} 
+          className="btn btn-primary"
+        >
+          Apply for this Job
+        </Link>
+      )}
     </div>
   );
 };

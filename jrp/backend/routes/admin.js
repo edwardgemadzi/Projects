@@ -1,89 +1,241 @@
 const express = require('express');
 const router = express.Router();
+const { verifyToken } = require('../middleware/authMiddleware');
+const { adminMiddleware } = require('../middleware/adminMiddleware');
 const User = require('../models/User');
 const Job = require('../models/Job');
 const Application = require('../models/Application');
-const { verifyToken } = require('../middleware/authMiddleware');
-const { requireAdmin } = require('../middleware/adminMiddleware');
+const { asyncHandler } = require('../middleware/errorHandler');
 
-// GET /api/admin/users — List all users
-router.get('/users', verifyToken, requireAdmin, async (req, res) => {
+// Get all users (admin only)
+router.get('/users', verifyToken, adminMiddleware, asyncHandler(async (req, res) => {
     try {
-        const users = await User.find().select('-password');
+        const users = await User.find().select('-password').sort({ createdAt: -1 });
         res.json(users);
-    } catch {
+    } catch (error) {
+        console.error('Error fetching users:', error);
         res.status(500).json({ message: 'Error fetching users' });
     }
-});
+}));
 
-// Get all jobs (for admin)
-router.get('/jobs', verifyToken, requireAdmin, async (req, res) => {
-  try {
-    const jobs = await Job.find().populate('createdBy', 'name').sort({ createdAt: -1 });
-    res.json(jobs);
-  } catch {
-    res.status(500).json({ message: 'Error fetching jobs' });
-  }
-});
+// Get all jobs with creator details (admin only)
+router.get('/jobs', verifyToken, adminMiddleware, asyncHandler(async (req, res) => {
+    try {
+        const jobs = await Job.find()
+            .populate('createdBy', 'name email')
+            .sort({ createdAt: -1 });
+        res.json(jobs);
+    } catch (error) {
+        console.error('Error fetching jobs:', error);
+        res.status(500).json({ message: 'Error fetching jobs' });
+    }
+}));
 
-// Delete a user
-router.delete('/users/:id', verifyToken, requireAdmin, async (req, res) => {
-  try {
-    await User.findByIdAndDelete(req.params.id);
-    res.json({ message: 'User deleted successfully' });
-  } catch {
-    res.status(500).json({ message: 'Error deleting user' });
-  }
-});
+// Get all applications with details (admin only)
+router.get('/applications', verifyToken, adminMiddleware, asyncHandler(async (req, res) => {
+    try {
+        const applications = await Application.find()
+            .populate('job', 'title company')
+            .populate('applicant', 'name email')
+            .sort({ createdAt: -1 });
+        res.json(applications);
+    } catch (error) {
+        console.error('Error fetching applications:', error);
+        res.status(500).json({ message: 'Error fetching applications' });
+    }
+}));
 
-// Update a user
-router.put('/users/:id', verifyToken, requireAdmin, async (req, res) => {
-  try {
-    const { name, email, role } = req.body;
-    const updates = { name, email, role };
-    
-    const user = await User.findByIdAndUpdate(req.params.id, updates, { new: true });
-    res.json(user);
-  } catch {
-    res.status(500).json({ message: 'Error updating user' });
-  }
-});
+// Get system statistics (admin only)
+router.get('/statistics', verifyToken, adminMiddleware, asyncHandler(async (req, res) => {
+    try {
+        const [totalUsers, totalJobs, totalApplications] = await Promise.all([
+            User.countDocuments(),
+            Job.countDocuments(),
+            Application.countDocuments()
+        ]);
 
-// Delete a job
-router.delete('/jobs/:id', verifyToken, requireAdmin, async (req, res) => {
-  try {
-    await Job.findByIdAndDelete(req.params.id);
-    res.json({ message: 'Job deleted successfully' });
-  } catch {
-    res.status(500).json({ message: 'Error deleting job' });
-  }
-});
+        const userStats = await User.aggregate([
+            {
+                $group: {
+                    _id: '$role',
+                    count: { $sum: 1 }
+                }
+            }
+        ]);
 
-// Update a job
-router.put('/jobs/:id', verifyToken, requireAdmin, async (req, res) => {
-  try {
-    const updates = req.body;
-    const job = await Job.findByIdAndUpdate(req.params.id, updates, { new: true });
-    res.json(job);
-  } catch {
-    res.status(500).json({ message: 'Error updating job' });
-  }
-});
+        const applicationStats = await Application.aggregate([
+            {
+                $group: {
+                    _id: '$status',
+                    count: { $sum: 1 }
+                }
+            }
+        ]);
 
-// Migration endpoint to add status to existing applications
-router.post('/migrate-applications', verifyToken, requireAdmin, async (req, res) => {
-  try {
-    const result = await Application.updateMany(
-      { status: { $exists: false } },
-      { $set: { status: 'applied' } }
-    );
-    res.json({ 
-      message: 'Migration completed', 
-      modifiedCount: result.modifiedCount 
-    });
-  } catch {
-    res.status(500).json({ message: 'Error during migration' });
-  }
-});
+        const recentUsers = await User.find()
+            .select('name email role createdAt')
+            .sort({ createdAt: -1 })
+            .limit(5);
+
+        const recentJobs = await Job.find()
+            .populate('createdBy', 'name')
+            .select('title company location createdAt')
+            .sort({ createdAt: -1 })
+            .limit(5);
+
+        res.json({
+            totalUsers,
+            totalJobs,
+            totalApplications,
+            userStats,
+            applicationStats,
+            recentUsers,
+            recentJobs
+        });
+    } catch (error) {
+        console.error('Error fetching statistics:', error);
+        res.status(500).json({ message: 'Error fetching statistics' });
+    }
+}));
+
+// Get user growth data (admin only)
+router.get('/user-growth', verifyToken, adminMiddleware, asyncHandler(async (req, res) => {
+    try {
+        const { days = 30 } = req.query;
+        
+        const growth = await User.aggregate([
+            {
+                $match: {
+                    createdAt: {
+                        $gte: new Date(Date.now() - days * 24 * 60 * 60 * 1000)
+                    }
+                }
+            },
+            {
+                $group: {
+                    _id: {
+                        $dateToString: {
+                            format: "%Y-%m-%d",
+                            date: "$createdAt"
+                        }
+                    },
+                    count: { $sum: 1 }
+                }
+            },
+            {
+                $sort: { _id: 1 }
+            }
+        ]);
+
+        res.json(growth);
+    } catch (error) {
+        console.error('Error fetching user growth:', error);
+        res.status(500).json({ message: 'Error fetching user growth' });
+    }
+}));
+
+// Get job growth data (admin only)
+router.get('/job-growth', verifyToken, adminMiddleware, asyncHandler(async (req, res) => {
+    try {
+        const { days = 30 } = req.query;
+        
+        const growth = await Job.aggregate([
+            {
+                $match: {
+                    createdAt: {
+                        $gte: new Date(Date.now() - days * 24 * 60 * 60 * 1000)
+                    }
+                }
+            },
+            {
+                $group: {
+                    _id: {
+                        $dateToString: {
+                            format: "%Y-%m-%d",
+                            date: "$createdAt"
+                        }
+                    },
+                    count: { $sum: 1 }
+                }
+            },
+            {
+                $sort: { _id: 1 }
+            }
+        ]);
+
+        res.json(growth);
+    } catch (error) {
+        console.error('Error fetching job growth:', error);
+        res.status(500).json({ message: 'Error fetching job growth' });
+    }
+}));
+
+// Get top employers (admin only)
+router.get('/top-employers', verifyToken, adminMiddleware, asyncHandler(async (req, res) => {
+    try {
+        const topEmployers = await Job.aggregate([
+            {
+                $group: {
+                    _id: '$createdBy',
+                    count: { $sum: 1 }
+                }
+            },
+            {
+                $lookup: {
+                    from: 'users',
+                    localField: '_id',
+                    foreignField: '_id',
+                    as: 'employer'
+                }
+            },
+            {
+                $unwind: '$employer'
+            },
+            {
+                $project: {
+                    name: '$employer.name',
+                    email: '$employer.email',
+                    count: 1
+                }
+            },
+            {
+                $sort: { count: -1 }
+            },
+            {
+                $limit: 10
+            }
+        ]);
+
+        res.json(topEmployers);
+    } catch (error) {
+        console.error('Error fetching top employers:', error);
+        res.status(500).json({ message: 'Error fetching top employers' });
+    }
+}));
+
+// Get popular industries (admin only)
+router.get('/popular-industries', verifyToken, adminMiddleware, asyncHandler(async (req, res) => {
+    try {
+        const popularIndustries = await Job.aggregate([
+            {
+                $group: {
+                    _id: '$industry',
+                    count: { $sum: 1 }
+                }
+            },
+            {
+                $sort: { count: -1 }
+            },
+            {
+                $limit: 10
+            }
+        ]);
+
+        res.json(popularIndustries);
+    } catch (error) {
+        console.error('Error fetching popular industries:', error);
+        res.status(500).json({ message: 'Error fetching popular industries' });
+    }
+}));
 
 module.exports = router;

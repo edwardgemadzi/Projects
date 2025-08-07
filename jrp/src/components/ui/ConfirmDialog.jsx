@@ -1,19 +1,28 @@
 import React from 'react';
 
 const ConfirmDialog = ({ 
-  isOpen, 
-  onClose, 
-  onConfirm, 
+  isOpen = false, 
+  onClose = () => {}, // Default function to prevent errors
+  onConfirm = () => {}, // Default function to prevent errors
   title = 'Confirm Action',
   message = 'Are you sure you want to proceed?',
   confirmText = 'Confirm',
   cancelText = 'Cancel',
-  variant = 'danger' // danger, warning, primary, etc.
+  variant = 'danger'
 }) => {
   if (!isOpen) return null;
 
   const handleBackdropClick = (e) => {
     if (e.target === e.currentTarget) {
+      onClose();
+    }
+  };
+
+  const handleConfirm = () => {
+    if (typeof onConfirm === 'function') {
+      onConfirm();
+    }
+    if (typeof onClose === 'function') {
       onClose();
     }
   };
@@ -49,10 +58,7 @@ const ConfirmDialog = ({
             <button 
               type="button" 
               className={`btn btn-${variant}`} 
-              onClick={() => {
-                onConfirm();
-                onClose();
-              }}
+              onClick={handleConfirm}
             >
               {confirmText}
             </button>

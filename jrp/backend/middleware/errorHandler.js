@@ -50,6 +50,43 @@ const errorHandler = (err, req, res, _next) => {
         error = { message, status: 401 };
     }
 
+    // Multer file upload errors
+    if (err.code === 'LIMIT_FILE_SIZE') {
+        const message = 'File size too large. Maximum size is 5MB.';
+        error = { message, status: 400 };
+    }
+
+    if (err.code === 'LIMIT_FILE_COUNT') {
+        const message = 'Too many files. Only one file allowed.';
+        error = { message, status: 400 };
+    }
+
+    if (err.code === 'LIMIT_UNEXPECTED_FILE') {
+        const message = 'Unexpected file field.';
+        error = { message, status: 400 };
+    }
+
+    // Multer custom file filter errors
+    if (err.message && err.message.includes('Invalid file type')) {
+        error = { message: err.message, status: 400 };
+    }
+
+    if (err.message && err.message.includes('File size too large')) {
+        error = { message: err.message, status: 400 };
+    }
+
+    // Rate limiting errors
+    if (err.status === 429) {
+        const message = 'Too many requests. Please try again later.';
+        error = { message, status: 429 };
+    }
+
+    // Network/connection errors
+    if (err.code === 'ECONNREFUSED') {
+        const message = 'Database connection failed. Please try again later.';
+        error = { message, status: 503 };
+    }
+
     const status = error.status || err.statusCode || 500;
     const message = error.message || 'Server Error';
 
