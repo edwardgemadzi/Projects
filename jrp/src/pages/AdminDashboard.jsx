@@ -15,7 +15,6 @@ const AdminDashboard = () => {
 
     const {
         loading: usersLoading,
-        error: usersError,
         execute: fetchUsersExecute
     } = useAsync();
 

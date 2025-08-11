@@ -10,21 +10,24 @@ class ErrorBoundary extends React.Component {
         };
     }
 
-    static getDerivedStateFromError(error) {
+    // Avoid ESLint unused param warning
+    static getDerivedStateFromError(_error) {
         return { hasError: true };
     }
 
     componentDidCatch(error, errorInfo) {
+        // Prefer error over log; many ESLint configs allow console.error
         console.error('Error caught by boundary:', error, errorInfo);
+
         this.setState({
-            error: error,
-            errorInfo: errorInfo
+            error,
+            errorInfo
         });
 
-        // Log error to external service in production
-        if (process.env.NODE_ENV === 'production') {
-            // Send to error reporting service
-            console.log('Error logged to service:', error.message);
+        // In Vite, use import.meta.env.PROD instead of process.env.NODE_ENV
+        if (import.meta.env.PROD) {
+            // Hook for reporting service (e.g., Sentry). Avoid console in prod.
+            // reportError(error, errorInfo);
         }
     }
 
@@ -37,7 +40,13 @@ class ErrorBoundary extends React.Component {
     };
 
     render() {
-        if (this.state.hasError) {
+        const { hasError, error, errorInfo } = this.state;
+
+        if (hasError) {
+            // Support function fallback: fallback({ error, errorInfo, reset })
+            if (typeof this.props.fallback === 'function') {
+                return this.props.fallback({ error, errorInfo, reset: this.handleRetry });
+            }
             if (this.props.fallback) {
                 return this.props.fallback;
             }
@@ -55,15 +64,15 @@ class ErrorBoundary extends React.Component {
                                     <p className="text-muted mb-4">
                                         We encountered an unexpected error. Our team has been notified and is working to fix it.
                                     </p>
-                                    
-                                    {process.env.NODE_ENV === 'development' && this.state.error && (
+
+                                    {import.meta.env.DEV && error && (
                                         <div className="alert alert-warning text-start mb-4">
                                             <h6 className="alert-heading">Error Details (Development)</h6>
-                                            <p className="mb-1"><strong>Error:</strong> {this.state.error.message}</p>
+                                            <p className="mb-1"><strong>Error:</strong> {error.message}</p>
                                             <details>
                                                 <summary>Stack Trace</summary>
                                                 <pre className="mt-2" style={{ fontSize: '0.8rem' }}>
-                                                    {this.state.errorInfo?.componentStack}
+                                                    {errorInfo?.componentStack}
                                                 </pre>
                                             </details>
                                         </div>

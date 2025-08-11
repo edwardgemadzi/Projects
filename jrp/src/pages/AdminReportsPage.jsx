@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect, useContext, useCallback } from 'react';
 import { AuthContext } from '../context/AuthContext';
 import axiosInstance from '../api/axios';
 import LoadingSpinner from '../components/ui/LoadingSpinner';
@@ -29,11 +29,7 @@ const AdminReportsPage = () => {
     const [selectedReport, setSelectedReport] = useState('overview');
     const [dateRange, setDateRange] = useState('30');
 
-    useEffect(() => {
-        fetchReportData();
-    }, [dateRange]);
-
-    const fetchReportData = async () => {
+    const fetchReportData = useCallback(async () => {
         try {
             setLoading(true);
             
@@ -110,7 +106,11 @@ const AdminReportsPage = () => {
         } finally {
             setLoading(false);
         }
-    };
+    }, [showNotification]);
+
+    useEffect(() => {
+        fetchReportData();
+    }, [dateRange, fetchReportData]);
 
     const calculateGrowth = (data, dateField, days) => {
         const growth = [];

@@ -21,7 +21,7 @@ const ApplyPage = () => {
       try {
         const response = await axiosInstance.get(`/jobs/${jobId}`);
         setJob(response.data);
-      } catch (error) {
+      } catch {
         showNotification('Error loading job details', 'error');
         navigate('/jobs');
       } finally {

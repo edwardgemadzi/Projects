@@ -357,7 +357,7 @@ const AnalyticsDashboard = () => {
                   <span className="badge bg-success">{inventoryData.profitAnalysis.averageProfitMargin.toFixed(1)}%</span>
                 </div>
                 <div className="d-flex justify-content-between align-items-center mb-2">
-                  <span>High Margin Items (>50%)</span>
+                  <span>High Margin Items (&gt;50%)</span>
                   <span className="badge bg-success">{inventoryData.profitAnalysis.highMarginItems}</span>
                 </div>
                 <div className="d-flex justify-content-between align-items-center">

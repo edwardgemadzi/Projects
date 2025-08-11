@@ -1,3 +1,6 @@
+// Suppress util._extend deprecation warning from dependencies
+process.noDeprecation = true;
+
 const app = require('./app');
 
 const PORT = process.env.PORT || 5002;

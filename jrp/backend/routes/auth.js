@@ -13,7 +13,6 @@ const {
 const { verifyToken } = require('../middleware/authMiddleware');
 const { validateRegistration, validateLogin, validateProfileUpdate } = require('../middleware/validation');
 const { asyncHandler } = require('../middleware/errorHandler');
-const config = require('../config/env');
 const logger = require('../config/logger');
 const bcrypt = require('bcryptjs');
 const User = require('../models/User');

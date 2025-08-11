@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { AuthContext } from '../context/AuthContext';
-import axiosInstance from '../api/axios';
 import LoadingSpinner from '../components/ui/LoadingSpinner';
 import { useNotification } from '../components/ui/NotificationProvider';
 
@@ -51,6 +50,8 @@ const AdminSettingsPage = () => {
 
     useEffect(() => {
         fetchSettings();
+        // fetchSettings is defined in component scope and stable for this lifecycle
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     const fetchSettings = async () => {
@@ -59,7 +60,7 @@ const AdminSettingsPage = () => {
             // In a real app, you'd fetch settings from the backend
             // For now, we'll use the default settings
             setSettings(settings);
-        } catch (error) {
+    } catch {
             showNotification('Failed to load settings', 'error');
         } finally {
             setLoading(false);
@@ -82,7 +83,7 @@ const AdminSettingsPage = () => {
             // In a real app, you'd save settings to the backend
             await new Promise(resolve => setTimeout(resolve, 1000)); // Simulate API call
             showNotification(`${category} settings saved successfully`, 'success');
-        } catch (error) {
+    } catch {
             showNotification('Failed to save settings', 'error');
         } finally {
             setSaving(false);
@@ -110,7 +111,7 @@ const AdminSettingsPage = () => {
                 default:
                     break;
             }
-        } catch (error) {
+    } catch {
             showNotification('Failed to perform system action', 'error');
         } finally {
             setSaving(false);
