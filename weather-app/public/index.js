@@ -1,20 +1,28 @@
-let MAPTILER_API_KEY = '';
-let WEATHER_API_KEY = '';
-
 fetch('/api/keys')
-    .then(res => res.json())
+    .then(res => {
+        if (!res.ok) {
+            throw new Error(`HTTP error! status: ${res.status}`);
+        }
+        return res.json();
+    })
     .then(keys => {
-        MAPTILER_API_KEY = keys.maptiler;
-        WEATHER_API_KEY = keys.weather;
+        console.log('API keys loaded:', keys);
+        
+        if (!keys.maptiler || !keys.weather) {
+            throw new Error('API keys are missing or invalid');
+        }
 
-        maptilersdk.config.apiKey = MAPTILER_API_KEY;
+        maptilersdk.config.apiKey = keys.maptiler;
 
         // Re-initialize the map *after* setting the API key
-        initApp();
-    }
-);
+        initApp(keys.weather);
+    })
+    .catch(error => {
+        console.error('Failed to load API keys:', error);
+        document.getElementById('map').innerHTML = '<div style="padding: 20px; color: red; text-align: center;">Failed to load API keys. Please check the server.</div>';
+    });
 
-function initApp(){
+function initApp(WEATHER_API_KEY){
 
     const weatherLayers = {
         "precipitation": {
@@ -44,16 +52,31 @@ function initApp(){
         }
     };
 
-    const map = (window.map = new maptilersdk.Map({
-        container: 'map', // container's id or the HTML element to render the map
-        style: maptilersdk.MapStyle.BACKDROP,  // stylesheet location
-        zoom: 0,
-        center: [0, 0], // Central Africa
-        maxZoom: 11.9,
-        hash: true,
-        projectionControl: true,
-        projection: 'globe'
-    }));
+    try {
+        const map = (window.map = new maptilersdk.Map({
+            container: 'map',
+            style: maptilersdk.MapStyle.BACKDROP,
+            zoom: 0,
+            center: [0, 0],
+            pitch: 60, // Add initial pitch for 3D effect
+            maxPitch: 85, // Allow high pitch for better globe view
+            maxZoom: 11.9,
+            hash: true,
+            projection: 'globe',
+            projectionControl: true,
+            terrain: true, // Enable terrain for 3D effect
+            navigationControl: true,
+            globe: {
+                enabled: true
+            }
+        }));
+
+        console.log('Map initialized successfully');
+    } catch (error) {
+        console.error('Failed to initialize map:', error);
+        document.getElementById('map').innerHTML = '<div style="padding: 20px; color: red; text-align: center;">Failed to initialize map. Error: ' + error.message + '</div>';
+        return;
+    }
 
     //       map._controls
     //   .filter(ctrl => ctrl.constructor.name === 'GeolocateControl')
@@ -103,8 +126,19 @@ function initApp(){
     }
 
     map.on('load', function () {
-        map.setPaintProperty("Water", 'fill-color', "rgba(0, 0, 0, 0.4)");
-        initWeatherMap(initWeatherLayer);
+        console.log('Map loaded successfully');
+        try {
+            map.setPaintProperty("Water", 'fill-color', "rgba(0, 0, 0, 0.4)");
+            initWeatherMap(initWeatherLayer);
+            console.log('Weather map initialized');
+        } catch (error) {
+            console.error('Error initializing weather map:', error);
+        }
+    });
+
+    map.on('error', function(e) {
+        console.error('Map error:', e);
+        document.getElementById('map').innerHTML = '<div style="padding: 20px; color: red; text-align: center;">Map failed to load. Please check your internet connection.</div>';
     });
 
     map.on('mouseout', function(evt) {
@@ -184,32 +218,39 @@ function initApp(){
     }
 
     function createWeatherLayer(type){
+        console.log('Creating weather layer:', type);
         let weatherLayer = null;
-        switch (type) {
-            case 'precipitation':
-            weatherLayer = new maptilerweather.PrecipitationLayer({id: 'precipitation'});
-            break;
-            case 'pressure':
-            weatherLayer = new maptilerweather.PressureLayer({
-                opacity: 0.8,
-                id: 'pressure'
-            });
-            break;
-            case 'radar':
-            weatherLayer = new maptilerweather.RadarLayer({
-                opacity: 0.8,
-                id: 'radar'
-            });
-            break;
-            case 'temperature':
-            weatherLayer = new maptilerweather.TemperatureLayer({
-                colorramp: maptilerweather.ColorRamp.builtin.TEMPERATURE_3,
-                id: 'temperature'
-            });
-            break;
-            case 'wind':
-            weatherLayer = new maptilerweather.WindLayer({id: 'wind'});
-            break;
+        try {
+            switch (type) {
+                case 'precipitation':
+                weatherLayer = new maptilerweather.PrecipitationLayer({id: 'precipitation'});
+                break;
+                case 'pressure':
+                weatherLayer = new maptilerweather.PressureLayer({
+                    opacity: 0.8,
+                    id: 'pressure'
+                });
+                break;
+                case 'radar':
+                weatherLayer = new maptilerweather.RadarLayer({
+                    opacity: 0.8,
+                    id: 'radar'
+                });
+                break;
+                case 'temperature':
+                weatherLayer = new maptilerweather.TemperatureLayer({
+                    colorramp: maptilerweather.ColorRamp.builtin.TEMPERATURE_3,
+                    id: 'temperature'
+                });
+                break;
+                case 'wind':
+                weatherLayer = new maptilerweather.WindLayer({id: 'wind'});
+                break;
+            }
+            console.log('Weather layer created successfully:', type);
+        } catch (error) {
+            console.error('Error creating weather layer:', error);
+            return null;
         }
 
         // Called when the animation is progressing
@@ -268,7 +309,7 @@ function initApp(){
             return;
         }
 
-        const url = `http://api.weatherapi.com/v1/current.json?key=${WEATHER_API_KEY}&q=${city}&aqi=no`;
+        const url = `https://api.weatherapi.com/v1/current.json?key=${WEATHER_API_KEY}&q=${city}&aqi=no`;
         try {
             const res = await fetch(url);
             const data = await res.json();
@@ -343,10 +384,11 @@ function initApp(){
             center: [lng, lat],
             zoom: 11.9,
             bearing: 0,
-            pitch: 90,
+            pitch: 60,
             speed: 1.9,
-            curve: 1.42,
-            easing: t => t
+            curve: 1,
+            easing: (t) => t * (2 - t),
+            essential: true
         });
     }
 }

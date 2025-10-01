@@ -135,5 +135,19 @@
 
     <script src="index.js"></script>
     
+    <script>
+        // Add some basic error checking
+        window.addEventListener('error', function(e) {
+            console.error('Global error:', e.error);
+        });
+        
+        // Check if required libraries are loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('DOM loaded');
+            console.log('maptilersdk available:', typeof maptilersdk !== 'undefined');
+            console.log('maptilerweather available:', typeof maptilerweather !== 'undefined');
+        });
+    </script>
+    
   </body>
 </html>

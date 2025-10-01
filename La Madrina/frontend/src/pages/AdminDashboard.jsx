@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { Navigate } from 'react-router-dom';
 import InventoryManagement from '../components/InventoryManagement';
-import AnalyticsDashboard from '../components/AnalyticsDashboard';
 
 const AdminDashboard = () => {
   const { user, isAuthenticated } = useAuth();
@@ -172,20 +171,6 @@ const AdminDashboard = () => {
                 }}
               >
                 Messages
-              </button>
-            </li>
-            <li className="nav-item">
-              <button 
-                className={`nav-link ${activeTab === 'analytics' ? 'active' : ''}`}
-                onClick={() => setActiveTab('analytics')}
-                style={{ 
-                  backgroundColor: activeTab === 'analytics' ? '#E91E63' : 'transparent',
-                  borderColor: '#E91E63',
-                  color: activeTab === 'analytics' ? 'white' : '#E91E63'
-                }}
-              >
-                <i className="bi bi-graph-up me-2"></i>
-                Analytics
               </button>
             </li>
           </ul>
@@ -363,11 +348,6 @@ const AdminDashboard = () => {
       {/* Inventory Tab */}
       {activeTab === 'inventory' && (
         <InventoryManagement />
-      )}
-
-      {/* Analytics Tab */}
-      {activeTab === 'analytics' && (
-        <AnalyticsDashboard />
       )}
 
       {/* Orders Tab */}
